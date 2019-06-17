@@ -1,0 +1,8 @@
+# controller publishing frequency
+frequency: 20.0
+
+# initial setpoint published when going offboard
+initial_roll: 0.0
+initial_pitch: 0.0
+initial_yaw: 0.0
+initial_thrust: 0.005
