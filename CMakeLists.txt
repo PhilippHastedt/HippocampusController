@@ -222,3 +222,7 @@ add_executable(simple_manual_controller src/simple_manual_controller.cpp)
 add_dependencies(simple_manual_controller hippocampus_controller_messages_cpp)
 target_link_libraries(simple_manual_controller ${catkin_LIBRARIES})
 
+add_executable(circle_controller src/circle_controller.cpp)
+add_dependencies(circle_controller hippocampus_controller_messages_cpp)
+target_link_libraries(circle_controller ${catkin_LIBRARIES})
+
