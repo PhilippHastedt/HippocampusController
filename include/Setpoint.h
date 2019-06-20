@@ -48,59 +48,68 @@ private:
      Setpoint _sp;
 
 public:
-    virtual ~AttitudeSetpoint() {}
-    AttitudeSetpoint(){
-        _sp.e.roll = 0;
-        _sp.e.pitch = 0;
-        _sp.e.yaw = 0;
-        _sp.q = euler2quat(_sp.e);
-        _sp.thrust = 0.005;
-    }
-
-    AttitudeSetpoint(float roll_, float pitch_, float yaw_, float thrust_){
-        _sp.e.roll = roll_;
-        _sp.e.pitch = pitch_;
-        _sp.e.yaw = yaw_;
-        _sp.q = euler2quat(_sp.e);
-        _sp.thrust = thrust_;
-    }
-
-    AttitudeSetpoint(Euler e_, float thrust_){
-        _sp.e = e_;
-        _sp.q = euler2quat(_sp.e);
-        _sp.thrust = thrust_;
-    }
-
-    AttitudeSetpoint(Quaternionf q_, float thrust_){
-        _sp.q = q_;
-        _sp.e = quat2euler(_sp.q);
-        _sp.thrust = thrust_;
-
-    }
-
-    void set(float roll_, float pitch_, float yaw_, float thrust_){
-        _sp.e.roll = roll_;
-        _sp.e.pitch = pitch_;
-        _sp.e.yaw = yaw_;
-        _sp.q = euler2quat(_sp.e);
-        _sp.thrust = thrust_;
-    }
-
-    void set(Euler e_, float thrust_){
-        _sp.e = e_;
-        _sp.q = euler2quat(_sp.e);
-        _sp.thrust = thrust_;
-    }
-
-    void set(Quaternionf q_, float thrust_){
-        _sp.q = q_;
-        _sp.e = quat2euler(_sp.q);
-        _sp.thrust = thrust_;
-    }
-
-    Setpoint get(){
-        return _sp;
-    }
+    ~AttitudeSetpoint() {}
+    AttitudeSetpoint();
+    AttitudeSetpoint(float roll_, float pitch_, float yaw_, float thrust_);
+    AttitudeSetpoint(Euler e_, float thrust_);
+    AttitudeSetpoint(Quaternionf q_, float thrust_);
+    void set(float roll_, float pitch_, float yaw_, float thrust_);
+    void set(Euler e_, float thrust_);
+    void set(Quaternionf q_, float thrust_);
+    Setpoint get();
 };
+
+AttitudeSetpoint::AttitudeSetpoint(){
+    _sp.e.roll = 0;
+    _sp.e.pitch = 0;
+    _sp.e.yaw = 0;
+    _sp.q = euler2quat(_sp.e);
+    _sp.thrust = 0.005;
+}
+
+AttitudeSetpoint::AttitudeSetpoint(float roll_, float pitch_, float yaw_, float thrust_){
+    _sp.e.roll = roll_;
+    _sp.e.pitch = pitch_;
+    _sp.e.yaw = yaw_;
+    _sp.q = euler2quat(_sp.e);
+    _sp.thrust = thrust_;
+}
+
+AttitudeSetpoint::AttitudeSetpoint(Euler e_, float thrust_){
+    _sp.e = e_;
+    _sp.q = euler2quat(_sp.e);
+    _sp.thrust = thrust_;
+}
+
+AttitudeSetpoint::AttitudeSetpoint(Quaternionf q_, float thrust_){
+    _sp.q = q_;
+    _sp.e = quat2euler(_sp.q);
+    _sp.thrust = thrust_;
+
+}
+
+void AttitudeSetpoint::set(float roll_, float pitch_, float yaw_, float thrust_){
+    _sp.e.roll = roll_;
+    _sp.e.pitch = pitch_;
+    _sp.e.yaw = yaw_;
+    _sp.q = euler2quat(_sp.e);
+    _sp.thrust = thrust_;
+}
+
+void AttitudeSetpoint::set(Euler e_, float thrust_){
+    _sp.e = e_;
+    _sp.q = euler2quat(_sp.e);
+    _sp.thrust = thrust_;
+}
+
+void AttitudeSetpoint::set(Quaternionf q_, float thrust_){
+    _sp.q = q_;
+    _sp.e = quat2euler(_sp.q);
+    _sp.thrust = thrust_;
+}
+
+Setpoint AttitudeSetpoint::get(){
+    return _sp;
+}
 
 #endif

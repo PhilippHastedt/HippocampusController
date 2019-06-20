@@ -15,6 +15,7 @@ using namespace Eigen;
 
 class SimpleManualControl: public AbstractHippocampusController{
 private:
+    // Setpoint variables
     Euler _sp_attitude;
     float _sp_thrust;
 
@@ -24,34 +25,6 @@ private:
 public:
     SimpleManualControl(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency);
     AttitudeSetpoint generateSetpoint();
-
 };
-
-SimpleManualControl::SimpleManualControl(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency):
-    AbstractHippocampusController(nh, nh_private, frequency)
-{
-    SimpleManualControl::loadParameters();
-}
-
-AttitudeSetpoint SimpleManualControl::generateSetpoint(){
-    AttitudeSetpoint sp;
-    SimpleManualControl::loadParameters();
-    _sp_attitude.roll = roll;
-    _sp_attitude.pitch = pitch;
-    _sp_attitude.yaw = yaw;
-    _sp_thrust = thrust;
-    SimpleManualControl::convertToENU(_sp_attitude);
-    sp.set(_sp_attitude, _sp_thrust);
-    return sp;
-}
-
-void SimpleManualControl::loadParameters(){
-    _nh_private.param("roll", roll, 0.0f);
-    _nh_private.param("pitch", pitch, 0.0f);
-    _nh_private.param("yaw", yaw, 0.0f);
-    _nh_private.param("thrust", thrust, 0.0f);
-
-}
-
 
 #endif

@@ -47,9 +47,8 @@ public:
     void offboardAndArm();
     void publishSetpoint(AttitudeSetpoint setpoint);
     void convertToNED(Vector3f &vec);
-    void convertToNED(Euler euler);
-    void convertToENU(Vector3f &vec);
-    void convertToENU(Euler euler);
+    void convertToNED(Euler &euler);
+    void convertSetpointToENU(Setpoint &s);
     virtual AttitudeSetpoint generateSetpoint() = 0;
 };
 
@@ -59,10 +58,10 @@ AbstractHippocampusController::AbstractHippocampusController(const ros::NodeHand
     _attitude_sp_pub = _nh.advertise<mavros_msgs::AttitudeTarget> ("mavros/setpoint_raw/attitude", 10);
     _arming_client = _nh.serviceClient<mavros_msgs::CommandBool> ("mavros/cmd/arming");
     _set_mode_client = _nh.serviceClient<mavros_msgs::SetMode> ("mavros/set_mode");
-    _nh_private.param("initial_roll", _initial_roll, 0.0f);
-    _nh_private.param("initial_pitch", _initial_pitch, 0.0f);
-    _nh_private.param("initial_yaw", _initial_yaw, 0.0f);
-    _nh_private.param("initial_thrust", _initial_thrust, 0.0f);
+    _nh_private.param<float>("initial_roll", _initial_roll, 0.0);
+    _nh_private.param<float>("initial_pitch", _initial_pitch, 0.0);
+    _nh_private.param<float>("initial_yaw", _initial_yaw, 0.0);
+    _nh_private.param<float>("initial_thrust", _initial_thrust, 0.0);
     _initial_sp.set(_initial_roll, _initial_pitch, _initial_yaw, _initial_thrust);
 }
 
@@ -77,6 +76,7 @@ void AbstractHippocampusController::waitForConnection(){
         ros::spinOnce();
         rate.sleep();
     }
+    ROS_INFO("Connection established");
 }
 
 void AbstractHippocampusController::offboardAndArm(){
@@ -109,23 +109,21 @@ void AbstractHippocampusController::convertToNED(Vector3f &vec){
     vec[2] = -1*vec[2];
 }
 
-void AbstractHippocampusController::convertToNED(Euler euler){
+void AbstractHippocampusController::convertToNED(Euler &euler){
     euler.pitch = -euler.pitch;
     euler.yaw = -euler.yaw;
 }
 
-void AbstractHippocampusController::convertToENU(Vector3f &vec){
-    vec[1] = -1*vec[1];
-    vec[2] = -1*vec[2];
-}
-
-void AbstractHippocampusController::convertToENU(Euler euler){
-    euler.pitch = -euler.pitch;
-    euler.yaw = -euler.yaw;
+void AbstractHippocampusController::convertSetpointToENU(Setpoint &s){
+    s.e.pitch = -s.e.pitch;
+    s.e.yaw = -s.e.yaw;
+    s.q = euler2quat(s.e);
 }
 
 void AbstractHippocampusController::publishSetpoint(AttitudeSetpoint setpoint){
     Setpoint sp = setpoint.get();
+    // Setpoints have to be send in ENU coordinates
+    AbstractHippocampusController::convertSetpointToENU(sp);
     mavros_msgs::AttitudeTarget target;
     target.thrust = (sp.thrust + 1) / 2;
     target.orientation.x = (double)sp.q.x();
