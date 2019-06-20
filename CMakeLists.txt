@@ -214,7 +214,11 @@ install(DIRECTORY config/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
   PATTERN ".svn" EXCLUDE)
 
-add_executable(hippocampus_controller src/hippocampus_controller.cpp)
-add_dependencies(hippocampus_controller hippocampus_controller_messages_cpp)
-target_link_libraries(hippocampus_controller ${catkin_LIBRARIES})
+add_executable(carrot_and_depth_controller src/carrot_and_depth_controller.cpp)
+add_dependencies(carrot_and_depth_controller hippocampus_controller_messages_cpp)
+target_link_libraries(carrot_and_depth_controller ${catkin_LIBRARIES})
+
+add_executable(simple_manual_controller src/simple_manual_controller.cpp)
+add_dependencies(simple_manual_controller hippocampus_controller_messages_cpp)
+target_link_libraries(simple_manual_controller ${catkin_LIBRARIES})
 

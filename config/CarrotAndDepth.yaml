@@ -1,3 +1,4 @@
 depthP: 1.0
 depthI: 0.0
+thrust: 0.3
 pitchConstraint: 45.0

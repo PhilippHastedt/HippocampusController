@@ -20,6 +20,7 @@ class AbstractHippocampusController{
 protected:
     ros::Rate rate;
     ros::NodeHandle _nh;
+    ros::NodeHandle _nh_private;
     ros::ServiceClient _arming_client;
     ros::ServiceClient _set_mode_client;
     ros::Subscriber _status;
@@ -40,24 +41,28 @@ protected:
 
 
 public:
-    AbstractHippocampusController(const ros::NodeHandle& nh, double frequency);
+    AbstractHippocampusController(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency);
     ~AbstractHippocampusController();
     void waitForConnection();
     void offboardAndArm();
     void publishSetpoint(AttitudeSetpoint setpoint);
+    void convertToNED(Vector3f &vec);
+    void convertToNED(Euler euler);
+    void convertToENU(Vector3f &vec);
+    void convertToENU(Euler euler);
     virtual AttitudeSetpoint generateSetpoint() = 0;
 };
 
-AbstractHippocampusController::AbstractHippocampusController(const ros::NodeHandle& nh, double frequency):
-    _nh(nh), rate(frequency){
+AbstractHippocampusController::AbstractHippocampusController(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency):
+    _nh(nh), _nh_private(nh_private), rate(frequency){
     _status = _nh.subscribe<mavros_msgs::State> ("mavros/state", 10, &AbstractHippocampusController::statusCallback, this);
     _attitude_sp_pub = _nh.advertise<mavros_msgs::AttitudeTarget> ("mavros/setpoint_raw/attitude", 10);
     _arming_client = _nh.serviceClient<mavros_msgs::CommandBool> ("mavros/cmd/arming");
     _set_mode_client = _nh.serviceClient<mavros_msgs::SetMode> ("mavros/set_mode");
-    _nh.param("initial_roll", _initial_roll, 0.0f);
-    _nh.param("initial_pitch", _initial_pitch, 0.0f);
-    _nh.param("initial_yaw", _initial_yaw, 0.0f);
-    _nh.param("initial_thrust", _initial_thrust, 0.005f);
+    _nh_private.param("initial_roll", _initial_roll, 0.0f);
+    _nh_private.param("initial_pitch", _initial_pitch, 0.0f);
+    _nh_private.param("initial_yaw", _initial_yaw, 0.0f);
+    _nh_private.param("initial_thrust", _initial_thrust, 0.0f);
     _initial_sp.set(_initial_roll, _initial_pitch, _initial_yaw, _initial_thrust);
 }
 
@@ -99,10 +104,30 @@ void AbstractHippocampusController::offboardAndArm(){
     }
 }
 
+void AbstractHippocampusController::convertToNED(Vector3f &vec){
+    vec[1] = -1*vec[1];
+    vec[2] = -1*vec[2];
+}
+
+void AbstractHippocampusController::convertToNED(Euler euler){
+    euler.pitch = -euler.pitch;
+    euler.yaw = -euler.yaw;
+}
+
+void AbstractHippocampusController::convertToENU(Vector3f &vec){
+    vec[1] = -1*vec[1];
+    vec[2] = -1*vec[2];
+}
+
+void AbstractHippocampusController::convertToENU(Euler euler){
+    euler.pitch = -euler.pitch;
+    euler.yaw = -euler.yaw;
+}
+
 void AbstractHippocampusController::publishSetpoint(AttitudeSetpoint setpoint){
     Setpoint sp = setpoint.get();
     mavros_msgs::AttitudeTarget target;
-    target.thrust = sp.thrust;
+    target.thrust = (sp.thrust + 1) / 2;
     target.orientation.x = (double)sp.q.x();
     target.orientation.y = (double)sp.q.y();
     target.orientation.z = (double)sp.q.z();

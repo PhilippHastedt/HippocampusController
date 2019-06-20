@@ -1,0 +1,6 @@
+<launch>
+<node pkg="hippocampus_controller" type="simple_manual_controller" name="manual" output="screen">
+<rosparam command="load" file="$(find hippocampus_controller)/config/parameters.yaml" />
+<rosparam command="load" file="$(find hippocampus_controller)/config/SimpleManualControl.yaml" />
+</node>
+</launch>

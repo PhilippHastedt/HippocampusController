@@ -8,20 +8,21 @@
 #include <Eigen/Eigen>
 
 #include <Setpoint.h>
-#include <CarrotAndDepthControl.h>
+#include <SimpleManualControl.h>
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "hippocampus_controller_node");
+    ros::init(argc, argv, "simple_control_node");
     ros::NodeHandle nh;
+    ros::NodeHandle nh_private;
 
     // Load frequency from parameter file
     double frequency;
-    nh.param("frequency", frequency, 20.0);
+    nh_private.param("frequency", frequency, 20.0);
     ros::Rate rate(frequency);
 
     // Create instance of Controller
-    CarrotAndDepthControl controller(nh, frequency);
+    SimpleManualControl controller(nh, nh_private, frequency);
     AttitudeSetpoint sp;
 
     // Initialize offboard mode
