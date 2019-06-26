@@ -29,6 +29,19 @@ protected:
     mavros_msgs::SetMode _set_mode;
     mavros_msgs::CommandBool _arm_command;
 
+    ros::Subscriber _pose_sub;
+    ros::Subscriber _velocity_sub;
+
+    Vector3f _pose_NED;
+    Vector3f _attitude_NED;
+    Vector3f _velocity_NED;
+    Vector3f _angular_velocity_NED;
+
+    Vector3f _pose_ENU;
+    Vector3f _attitude_ENU;
+    Vector3f _velocity_ENU;
+    Vector3f _angular_velocity_ENU;
+
     AttitudeSetpoint _initial_sp;
 
     float _initial_roll;
@@ -38,7 +51,8 @@ protected:
 
 
     void statusCallback(const mavros_msgs::State::ConstPtr& msg);
-
+    void poseCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
+    void velocityCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);
 
 public:
     AbstractHippocampusController(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency);
@@ -69,6 +83,39 @@ AbstractHippocampusController::~AbstractHippocampusController(){}
 
 void AbstractHippocampusController::statusCallback(const mavros_msgs::State::ConstPtr& msg){
     _current_status = *msg;
+}
+
+void AbstractHippocampusController::poseCallback(const geometry_msgs::PoseStamped::ConstPtr &msg){
+    Quaternionf q;
+    Euler orientation;
+    _pose_ENU[0] = msg->pose.position.x;
+    _pose_ENU[1] = msg->pose.position.y;
+    _pose_ENU[2] = msg->pose.position.z;
+    _pose_NED = _pose_ENU;
+    AbstractHippocampusController::convertToNED(_pose_NED);
+    q.x() = msg->pose.orientation.x;
+    q.y() = msg->pose.orientation.y;
+    q.z() = msg->pose.orientation.z;
+    q.w() = msg->pose.orientation.w;
+    orientation = quat2euler(q);
+    _attitude_ENU[0] = orientation.roll;
+    _attitude_ENU[1] = orientation.pitch;
+    _attitude_ENU[2] = orientation.yaw;
+    _attitude_NED = _attitude_ENU;
+    AbstractHippocampusController::convertToNED(_attitude_NED);
+}
+
+void AbstractHippocampusController::velocityCallback(const geometry_msgs::TwistStamped::ConstPtr &msg){
+    _velocity_ENU[0] = msg->twist.linear.x;
+    _velocity_ENU[1] = msg->twist.linear.y;
+    _velocity_ENU[2] = msg->twist.linear.z;
+    _velocity_NED = _velocity_ENU;
+    AbstractHippocampusController::convertToNED(_velocity_NED);
+    _angular_velocity_ENU[0] = msg->twist.angular.x;
+    _angular_velocity_ENU[1] = msg->twist.angular.y;
+    _angular_velocity_ENU[2] = msg->twist.angular.z;
+    _angular_velocity_NED = _angular_velocity_ENU;
+    AbstractHippocampusController::convertToNED(_angular_velocity_NED);
 }
 
 void AbstractHippocampusController::waitForConnection(){
