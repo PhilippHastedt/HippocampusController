@@ -2,6 +2,7 @@
 #define SETPOINT_H
 
 #include <ros/ros.h>
+#include <tf/tf.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Quaternion.h>
 #include <mavros_msgs/CommandBool.h>
@@ -28,19 +29,40 @@ struct Setpoint{
 
 static Euler quat2euler(Quaternionf q){
     Euler e;
-    Vector3f e_vec = q.toRotationMatrix().eulerAngles(0, 1, 2);
+    /**
+    Vector3f e_vec = q.normalized().toRotationMatrix().eulerAngles(0, 1, 2);
     e.roll = e_vec[0];
     e.pitch = e_vec[1];
-    e.yaw = e_vec[2];
+    e.yaw = e_vec[2];*/
+    double roll, pitch, yaw;
+    tf::Quaternion quat(q.x(), q.y(), q.z(), q.w());
+    tf::Matrix3x3 m(quat);
+    m.getRPY(roll, pitch, yaw);
+    e.roll = roll;
+    e.pitch = pitch;
+    e.yaw = yaw;
+
+
     return e;
+
 }
 
 static Quaternionf euler2quat(Euler e){
     Quaternionf q;
-    q = AngleAxisf(e.roll, Vector3f::UnitX())
+
+    /**q = AngleAxisf(e.roll, Vector3f::UnitX())
         * AngleAxisf(e.pitch, Vector3f::UnitY())
-        * AngleAxisf(e.yaw, Vector3f::UnitZ());
+        * AngleAxisf(e.yaw, Vector3f::UnitZ());*/
+    tf::Quaternion quat;
+    quat.setRPY(e.roll, e.pitch, e.yaw);
+    quat.normalize();
+    q.x() = quat[0];
+    q.y() = quat[1];
+    q.z() = quat[2];
+    q.w() = quat[3];
+    //q = quat;
     return q;
+
 }
 
 class AttitudeSetpoint{

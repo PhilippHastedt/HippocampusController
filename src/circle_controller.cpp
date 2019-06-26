@@ -39,35 +39,3 @@ int main(int argc, char **argv)
     }
     return 0;
 }
-
-//Constructor
-CircleControl::CircleControl(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency):
-    //Call super class constructor
-    AbstractHippocampusController(nh, nh_private, frequency)
-{
-    CircleControl::loadParameters();
-    roll = 0;
-    pitch = 0;
-}
-
-//Generate the setpoint to publish
-AttitudeSetpoint CircleControl::generateSetpoint(){
-    time_new = ros::Time::now();
-    delta_t = time_new - time_old;
-    time_old = time_new;
-    AttitudeSetpoint sp;
-    CircleControl::loadParameters();
-    _sp_attitude.roll = roll;
-    _sp_attitude.pitch = pitch;
-    _sp_attitude.yaw += 2 * M_PI / yawRate * delta_t.toSec();
-    _sp_thrust = thrust;
-
-    sp.set(_sp_attitude, _sp_thrust);
-    return sp;
-}
-
-void CircleControl::loadParameters(){
-    _nh_private.param<float>("yawRate", yawRate, 0.0);
-    _nh_private.param<float>("thrust", thrust, 0.0);
-}
-

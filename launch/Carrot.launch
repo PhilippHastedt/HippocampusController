@@ -1,0 +1,6 @@
+<launch>
+<node pkg="hippocampus_controller" type="carrot_controller" name="carrot" output="screen">
+<rosparam command="load" file="$(find hippocampus_controller)/config/parameters.yaml" />
+<rosparam command="load" file="$(find hippocampus_controller)/config/Carrot.yaml" />
+</node>
+</launch>

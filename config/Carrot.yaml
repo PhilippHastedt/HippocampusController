@@ -1,0 +1,8 @@
+thrust: 0.3
+yawMax: 45.0
+
+origin_x: 2.0
+origin_y: 2.0
+radius: 1.0
+lambda: 0.2
+gain: 1.0

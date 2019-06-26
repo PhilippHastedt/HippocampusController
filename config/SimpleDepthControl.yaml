@@ -1,0 +1,8 @@
+thrust: 0.3
+desiredDepth: 0.0
+depthP: 400.0
+depthI: 0.0
+iMax: 2.0
+depthD: 150.0
+pitchMax: 45.0
+yawRate: 30.0
