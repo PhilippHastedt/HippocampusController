@@ -1,0 +1,6 @@
+<launch>
+<node pkg="hippocampus_controller" type="pid_tuning" name="pid" output="screen">
+<rosparam command="load" file="$(find hippocampus_controller)/config/parameters.yaml" />
+<rosparam command="load" file="$(find hippocampus_controller)/config/PIDTuning.yaml" />
+</node>
+</launch>
