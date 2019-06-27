@@ -36,8 +36,11 @@ private:
     void velocityCallback(const geometry_msgs::TwistStamped::ConstPtr& msg);
 
     In order to subscribe to /mavros/local_position/pose or /mavros/local_position/velocity_body,
-    initialize subscriber in the constructor
+    initialize subscriber in the constructor.
 
+    The superclass also has a public and a private nodehandle:
+    ros::NodeHandle _nh
+    ros::NodeHandle _nh_private
      */
 public:
     Template(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, double frequency);
