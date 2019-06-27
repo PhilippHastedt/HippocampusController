@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "hippocampus_controller_node");
     ros::NodeHandle nh;
-    ros::NodeHandle nh_private;
+    ros::NodeHandle nh_private("~");
 
     // Load frequency from parameter file
     double frequency;

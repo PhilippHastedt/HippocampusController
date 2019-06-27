@@ -1,4 +1,18 @@
-depthP: 1.0
-depthI: 0.0
 thrust: 0.3
-pitchConstraint: 45.0
+
+# Carrot Parameters
+yawMax: 45.0
+origin_x: 2.0
+origin_y: 2.0
+radius: 1.0
+lambda: 0.2
+gain: 1.0
+
+# Depth Parameters
+desiredDepth: 0.0
+depthP: 300.0
+depthI: 0.0
+iMax: 2.0
+depthD: 150.0
+pitchMax: 45.0
+yawRate: 30.0
