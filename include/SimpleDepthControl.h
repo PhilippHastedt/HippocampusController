@@ -53,6 +53,7 @@ SimpleDepthContoller::SimpleDepthContoller(const ros::NodeHandle& nh, const ros:
     depthErrorSum = 0.0;
     SimpleDepthContoller::loadParameters();
     preError = 0;
+    ROS_INFO("Depth Constructor");
 }
 
 void SimpleDepthContoller::loadParameters(){
@@ -68,12 +69,14 @@ void SimpleDepthContoller::loadParameters(){
 }
 
 void SimpleDepthContoller::depthControl(){
+
     float depth = _pose_NED[2];
+
     // calculate error
     float depthError = desiredDepth - depth;
     float delta = depthError - preError;
     preError = depthError;
-    ROS_INFO("soll: %.2f;ist: %.2f; fehler: %.2f", desiredDepth, depth, depthError);
+    //ROS_INFO("soll: %.2f;ist: %.2f; fehler: %.2f", desiredDepth, depth, depthError);
     // sum up error
     depthErrorSum += depthError;
 
@@ -92,10 +95,14 @@ void SimpleDepthContoller::depthControl(){
 
     sp.pitch = command;
     //sp.pitch = 0.0;
-    ROS_INFO("sum: %.2f", depthErrorSum);
-    ROS_INFO("command: %.2f", command);
-    ROS_INFO("rpy: %.2f; %.2f; %.2f", _attitude_NED[0], _attitude_NED[1], _attitude_NED[2]);
+    //ROS_INFO("sum: %.2f", depthErrorSum);
+    //ROS_INFO("command: %.2f", command);
+    //ROS_INFO("pose NED:  %.2f;  %.2f;  %.2f", _pose_NED[0], _pose_NED[1], _pose_NED[2]);
+    //ROS_INFO("pose ENU:  %.2f;  %.2f;  %.2f", _pose_ENU[0], _pose_ENU[1], _pose_ENU[2]);
+    //ROS_INFO("attitude NED:  %.2f;  %.2f;  %.2f", _attitude_NED[0], _attitude_NED[1], _attitude_NED[2]);
+    //ROS_INFO("attitude ENU:  %.2f;  %.2f;  %.2f", _attitude_ENU[0], _attitude_ENU[1], _attitude_ENU[2]);
 }
+
 
 void SimpleDepthContoller::circleControl(){
     time_new = ros::Time::now();
@@ -106,7 +113,7 @@ void SimpleDepthContoller::circleControl(){
 
 AttitudeSetpoint SimpleDepthContoller::generateSetpoint(){
     SimpleDepthContoller::loadParameters();
-    SimpleDepthContoller::circleControl();
+    // SimpleDepthContoller::circleControl();
     SimpleDepthContoller::depthControl();
     sp.roll = 0.0;
     asp.set(sp, thrust);
