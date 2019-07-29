@@ -1,0 +1,6 @@
+<launch>
+<node pkg="hippocampus_controller" type="pitch_test" name="Pitch" output="screen">
+<rosparam command="load" file="$(find hippocampus_controller)/config/parameters.yaml" />
+<rosparam command="load" file="$(find hippocampus_controller)/config/PitchTest.yaml" />
+</node>
+</launch>

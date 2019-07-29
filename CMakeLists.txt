@@ -215,26 +215,29 @@ install(DIRECTORY config/
   PATTERN ".svn" EXCLUDE)
 
 add_executable(carrot_and_depth_controller src/carrot_and_depth_controller.cpp)
-add_dependencies(carrot_and_depth_controller hippocampus_controller_messages_cpp)
 target_link_libraries(carrot_and_depth_controller ${catkin_LIBRARIES})
 
 add_executable(simple_manual_controller src/simple_manual_controller.cpp)
-add_dependencies(simple_manual_controller hippocampus_controller_messages_cpp)
 target_link_libraries(simple_manual_controller ${catkin_LIBRARIES})
 
 add_executable(circle_controller src/circle_controller.cpp)
-add_dependencies(circle_controller hippocampus_controller_messages_cpp)
 target_link_libraries(circle_controller ${catkin_LIBRARIES})
 
 add_executable(simple_depth_controller src/simple_depth_controller.cpp)
-add_dependencies(simple_depth_controller hippocampus_controller_messages_cpp)
 target_link_libraries(simple_depth_controller ${catkin_LIBRARIES})
 
 add_executable(pid_tuning src/pid_tuning.cpp)
-add_dependencies(pid_tuning hippocampus_controller_messages_cpp)
 target_link_libraries(pid_tuning ${catkin_LIBRARIES})
 
 add_executable(carrot_controller src/carrot_controller.cpp)
-add_dependencies(carrot_controller hippocampus_controller_messages_cpp)
 target_link_libraries(carrot_controller ${catkin_LIBRARIES})
+
+add_executable(roll_test src/roll_test.cpp)
+target_link_libraries(roll_test ${catkin_LIBRARIES})
+
+add_executable(pitch_test src/pitch_test.cpp)
+target_link_libraries(pitch_test ${catkin_LIBRARIES})
+
+add_executable(yaw_test src/yaw_test.cpp)
+target_link_libraries(yaw_test ${catkin_LIBRARIES})
 

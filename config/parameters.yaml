@@ -5,4 +5,4 @@ frequency: 20.0
 initial_roll: 0.0
 initial_pitch: 0.0
 initial_yaw: 0.0
-initial_thrust: 0.0
+initial_thrust: 0.5
