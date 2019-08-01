@@ -49,10 +49,11 @@ YawTest::YawTest(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, d
 AttitudeSetpoint YawTest::generateSetpoint(){
     AttitudeSetpoint sp;
     YawTest::loadParameters();
-    if(resetTime){
+    if(resetTime == 1){
         time = 0.0;
     }
-
+     ROS_INFO("Time: %lf", time);
+     ROS_INFO("reset: %d", resetTime);
     if(time > 12) {
         yaw = 0;
     } else if(time > 9) {
