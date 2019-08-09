@@ -1,1 +1,3 @@
 resetTime: false
+startTime: 10.0
+interval: 3.0

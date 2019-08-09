@@ -23,6 +23,8 @@ private:
     float roll, pitch, yaw, thrust;
     void loadParameters();
     bool resetTime;
+    float startTime;
+    float interval;
 public:
 
     float time;
@@ -53,13 +55,13 @@ AttitudeSetpoint RollTest::generateSetpoint(){
         time = 0.0;
     }
 
-    if(time > 12) {
+    if(time < startTime) {
         roll = 0;
-    } else if(time > 9) {
-        roll = 30 * M_PI/180;
-    } else if(time > 6) {
-        roll = -10 * M_PI/180;
-    } else if(time > 3) {
+    } else if(time < startTime + interval) {
+        roll = 20 * M_PI/180;
+    } else if(time < startTime + 2*interval) {
+        roll = 0;
+    } else if(time < startTime + 3*interval) {
         roll = 20 * M_PI/180;
     } else {
         roll = 0;
@@ -75,7 +77,9 @@ AttitudeSetpoint RollTest::generateSetpoint(){
 }
 
 void RollTest::loadParameters(){
-    _nh_private.param<bool>("resetTime", resetTime, 0.0);
+    _nh_private.param<bool>("resetTime", resetTime, false);
+    _nh_private.param<float>("startTime", startTime, 0.0);
+    _nh_private.param<float>("interval", interval, 0.0);
 }
 
 
